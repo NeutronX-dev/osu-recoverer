@@ -42,12 +42,29 @@ async fn played_maps(
     limit: usize,
     offset: usize,
 ) -> Result<Vec<PlayedMaps>, Box<dyn std::error::Error>> {
-    let url = format!(
-        "https://osu.ppy.sh/users/{}/beatmapsets/most_played?limit={}&offset={}",
-        uid, limit, offset
-    );
-    let resp: Vec<PlayedMaps> = c.get(url).send().await?.json().await?;
-    Ok(resp)
+    let mut attempt = 0;
+    let mut delay = 200;
+    let mut err: Option<Box<dyn std::error::Error>> = None;
+    loop {
+        if attempt >= 6 {
+            break Err(err.unwrap());
+        }
+        let url = format!(
+            "https://osu.ppy.sh/users/{}/beatmapsets/most_played?limit={}&offset={}",
+            uid, limit, offset
+        );
+        let resp = c.get(url).send().await?.text().await?;
+        match serde_json::from_str(&resp) {
+            Ok(rs) => break Ok(rs),
+            Err(e) => {
+                err = Some(Box::new(e));
+                delay = delay + 55;
+                attempt = attempt + 1;
+                std::thread::sleep(std::time::Duration::from_millis(delay));
+                continue;
+            }
+        }
+    }
 }
 
 pub async fn download_beatmap(
@@ -63,8 +80,8 @@ pub async fn download_beatmap(
         .header("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
         .header("cookie", cookies)
         .header(
-            "ec-ch-ua",
-            "\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\", \"Google Chrome\";v=\"120\"",
+            "user-agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0 (Edition std-1)",
         )
         .header("sec-ch-ua-mobile", "?0")
         .send()
