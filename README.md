@@ -11,7 +11,7 @@ cargo build --release
 ./target/release/osu-recoverer.exe
 ```
 ## Usage
-When you open the file you will be prompted with your osu! ID like this
+Before getting started, you must make a folder named `maps` on the same folder as the executable. When you open the file you will be prompted with your osu! ID like this
 ```
 osu!user_id: _
 ```
