@@ -3,7 +3,7 @@ Downloads every map you have ever played in [osu!](https://osu.ppy.sh/) (if you 
 
 # Get Started
 ## Installation
-To get started either download the latest release [clicking here](https://github.com/NeutronX-dev/osu-recoverer/releases/latest/download/osu-recoverer.exe) or build the code yourselg with [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
+To get started either download the latest release [clicking here](https://github.com/NeutronX-dev/osu-recoverer/releases/latest/download/osu-recoverer.exe) or build the code yourself with [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 ```sh
 git clone https://github.com/NeutronX-dev/osu-recoverer
 cd ./osu-recoverer
